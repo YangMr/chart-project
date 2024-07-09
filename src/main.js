@@ -3,7 +3,7 @@ import 'normalize.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import 'amfe-flexible'
+import './utils/flexible.js'
 import './style/common.css'
 
 import App from './App.vue'
