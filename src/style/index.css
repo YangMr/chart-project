@@ -128,8 +128,18 @@
 
 .point .inner .chart {
     flex: 1;
+    margin-top: .25rem;
     display: flex;
     justify-content: space-between;
+}
+
+.point .inner .chart .pie {
+    flex: 1;
+    /*min-width: 180px;*/
+    /*width: 3.9rem;*/
+    /*height: 3rem;*/
+    /*margin-left: -0.25rem;*/
+
 }
 
 .point .inner .chart .data {
@@ -137,10 +147,10 @@
     flex-direction: column;
     justify-content: space-between;
     width: 2.1rem;
-    /*min-width: 130px;*/
+    /*min-width: 120px;*/
     padding: .45rem .375rem;
-    background: url("@/assets/images/rect.png") no-repeat;
-    background-size: cover;
+    background: url("@/assets/images/rect.png") no-repeat 0 0 / cover;
+    /*background-size: cover;*/
 }
 
 .point .inner .chart .data h4 {
@@ -156,18 +166,126 @@
 .map {
     height: 7.225rem;
     margin-bottom: 0.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.map .geo {
+    flex: 1;
+    margin-top: .25rem;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .user {
     height: 4.25rem;
 }
 
+.user .chart {
+    display: flex;
+    margin-top: .25rem;
+}
+
+.user .chart .bar {
+    height: 3rem;
+    width: 7.35rem;
+}
+
+.user .chart .data {
+    width: 2.1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: .45rem .375rem;
+    background: url("@/assets/images/rect.png") no-repeat 0 0 / cover;
+}
+
+.user .chart .data h4 {
+    font-size: .35rem;
+    color: #fff;
+    /*margin-bottom: .15rem;*/
+}
+
+.user .chart .data span {
+    font-size: .2rem;
+    color: #4c9bfd;
+}
+
 .order {
     height: 1.875rem;
 }
 
+.order .filter {
+    display: flex;
+}
+
+.order .filter span {
+    font-size: 0.225rem;
+    padding: 0 0.225rem;
+    border-right: 1px solid #00f2f1;
+    cursor: pointer;
+    color: #1950c4;
+    display: block;
+}
+
+.order .filter span.active {
+    color: #fff;
+}
+
+.order .filter span:first-child {
+    padding-left: 0;
+}
+
+.order .filter span:last-child {
+    border-right: none;
+}
+
+.order .data {
+    display: flex;
+    margin-top: .25rem;
+}
+
+.order .data .item {
+    width: 50%;
+}
+
+.order .data .item h4 {
+    font-size: 0.35rem;
+    color: #fff;
+    /*margin-bottom: .125rem;*/
+}
+
+.order .data .item span {
+    font-size: 0.2rem;
+    color: #4c9bfd;
+}
+
+
 .sales {
     height: 3.1rem;
+}
+
+.sales .caption {
+    display: flex;
+    align-items: center;
+}
+
+.sales .caption h3 {
+    padding-right: 0.225rem;
+    border-right: 0.025rem solid #fff;
+}
+
+.sales .caption span {
+    font-size: 0.225rem;
+    color: #0bace6;
+    padding: 0.05rem;
+    margin: -0.0375rem 0 0 0.2625rem;
+    border-radius: 0.0375rem;
+    cursor: pointer;
+}
+
+.sales .caption span.active {
+    background: #0bace6;;
+    color: #fff;
 }
 
 .wrap {
