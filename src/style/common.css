@@ -68,6 +68,12 @@ body {
     padding: 0.3rem 0.45rem;
 }
 
+h3 {
+    color: #fff;
+    font-size: 0.25rem;
+    font-weight: 600;
+}
+
 
 /*屏幕分辨率小于1024*/
 @media screen and (max-width: 1024px) {
