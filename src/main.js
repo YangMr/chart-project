@@ -1,5 +1,5 @@
 import 'normalize.css'
-import './utils/china.js'
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
