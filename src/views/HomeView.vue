@@ -1,5 +1,6 @@
 <script setup>
 import * as echarts from 'echarts'
+import china from '@/utils/china.js'
 
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 import { computed, onMounted, ref } from 'vue'
@@ -205,20 +206,77 @@ setInterval(() => {
 const salesTab = ref(0)
 const salesList = ref([
   {
-    title: '年'
+    title: '年',
+    series: [
+      [24, 40, 101, 134, 90, 230, 210, 230, 120, 230, 210, 120],
+      [40, 64, 191, 324, 290, 330, 310, 213, 180, 200, 180, 79]
+    ],
+    xAxis: [
+      '2099年',
+      '2199年',
+      '2299年',
+      '2399年',
+      '2499年',
+      '2599年',
+      '2699年',
+      '2799年',
+      '2899年',
+      '2999年',
+      '3099年',
+      '3199年'
+    ]
   },
   {
-    title: '季'
+    title: '季',
+    series: [
+      [23, 75, 12, 97],
+      [43, 31, 65, 23]
+    ],
+    xAxis: ['1季度', '2季度', '3季度', '4季度']
   },
   {
-    title: '月'
+    title: '月',
+    series: [
+      [34, 87, 32, 76, 98, 12, 32, 87, 39, 36, 29, 36],
+      [56, 43, 98, 21, 56, 87, 43, 12, 43, 54, 12, 98]
+    ],
+    xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
   },
   {
-    title: '周'
+    title: '周',
+    series: [
+      [43, 73, 62, 54, 91, 54, 84, 43, 86, 43, 54, 53],
+      [32, 54, 34, 87, 32, 45, 62, 68, 93, 54, 54, 24]
+    ],
+    xAxis: ['近1周', '近2周', '近3周', '近4周', '近5周', '近6周']
   }
 ])
 const handleSalesTab = (index) => {
   salesTab.value = index
+  initChartLine()
+}
+const salesLineData = computed(() => {
+  return salesList.value[salesTab.value]
+})
+let timer = null
+const start = () => {
+  clearInterval(timer)
+  timer = setInterval(() => {
+    salesTab.value++
+    if (salesTab.value >= 4) {
+      salesTab.value = 0
+    }
+    initChartLine()
+  }, 2000)
+}
+start()
+
+const mouseenter = () => {
+  clearInterval(timer)
+}
+
+const mouseleave = () => {
+  start()
 }
 
 // 初始化饼图
@@ -488,9 +546,567 @@ const initChartBar = () => {
   })
 }
 
+// 初始化销售额折线图
+const initChartLine = () => {
+  /**
+   * 1. 下载echarts
+   * 2. 导入echarts
+   * 3. 创建渲染的画布
+   * 4. 实例化echarts, 并指定渲染的画布
+   * 5. 指定配置项
+   * 6. 渲染配置项
+   * 7. 图表自适应
+   */
+
+  if (echarts.getInstanceByDom(document.getElementById('line'))) {
+    //  已存在则调用 dispose() 方法销毁
+    echarts.dispose(document.getElementById('line'))
+  }
+
+  const myCharts = echarts.init(document.getElementById('line'))
+
+  const option = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['预期销售额', '实际销售额'],
+      textStyle: {
+        color: '#4c9bfd'
+      },
+      right: '10%'
+    },
+    grid: {
+      top: '20%',
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+      show: true,
+      borderColor: '#012f4a'
+    },
+    color: ['#00f2f1', '#ed3f35'],
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        color: '#4c9bfd'
+      },
+      axisLine: {
+        show: false
+      },
+      data: salesLineData.value.xAxis
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#4c9bfd'
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#012f4a'
+        }
+      }
+    },
+    series: [
+      {
+        name: '预期销售额',
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        data: salesLineData.value.series[0]
+      },
+      {
+        name: '实际销售额',
+        type: 'line',
+        smooth: true,
+        stack: 'Total',
+        data: salesLineData.value.series[1]
+      }
+    ]
+  }
+
+  console.log('option', option)
+
+  myCharts.setOption(option)
+
+  window.addEventListener('resize', () => {
+    myCharts.resize()
+  })
+}
+
+// 初始化雷达图
+const initChartRadar = () => {
+  /**
+   * 1. 下载echarts
+   * 2. 导入echarts
+   * 3. 创建渲染的画布
+   * 4. 实例化echarts, 并指定渲染的画布
+   * 5. 指定配置项
+   * 6. 渲染配置项
+   * 7. 图表自适应
+   */
+
+  const myCharts = echarts.init(document.getElementById('radar'))
+  const dataBJ = [[90, 19, 56, 11, 34]]
+  const lineStyle = {
+    width: 1,
+    opacity: 0.5,
+    normal: {
+      color: '#fff'
+    }
+  }
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      borderWidth: 0,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      textStyle: {
+        color: '#fff'
+      },
+      position: ['40%', '5%']
+    },
+    backgroundColor: 'transparent',
+    radar: {
+      center: ['50%', '50%'],
+      radius: '50%',
+      indicator: [
+        { name: '淘宝', max: 90 },
+        { name: '京东', max: 22 },
+        { name: '苏宁', max: 75 },
+        { name: '微商', max: 22 },
+        { name: '其他', max: 132 }
+      ],
+
+      shape: 'circle',
+      splitNumber: 4,
+      axisName: {
+        color: '#4c9bfd'
+      },
+      splitLine: {
+        lineStyle: {
+          color: ['rgb(255, 255, 255)'].reverse()
+        }
+      },
+      splitArea: {
+        show: false
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#fff'
+        }
+      }
+    },
+    series: [
+      {
+        name: 'Beijing',
+        type: 'radar',
+        lineStyle: lineStyle,
+        data: dataBJ,
+        itemStyle: {
+          color: '#fff'
+        },
+        symbol: 'circle',
+        areaStyle: {
+          color: 'rgba(238, 197, 102, 0.6)'
+        }
+      }
+    ]
+  }
+
+  myCharts.setOption(option)
+
+  window.addEventListener('resize', () => {
+    myCharts.resize()
+  })
+}
+
+// 初始化销售进度饼图
+const initQuarterChartPie = () => {
+  /**
+   * 1. 下载echarts
+   * 2. 导入echarts
+   * 3. 创建渲染的画布
+   * 4. 实例化echarts, 并指定渲染的画布
+   * 5. 指定配置项
+   * 6. 渲染配置项
+   * 7. 图表自适应
+   */
+  const myCharts = echarts.init(document.getElementById('gauge'))
+
+  const option = {
+    series: [
+      {
+        name: 'Access From',
+        type: 'pie',
+        radius: ['130%', '150%'],
+        center: ['48%', '80%'],
+        // avoidLabelOverlap: false,
+        startAngle: 180,
+        hoverOffset: 0,
+        label: {
+          show: false
+        },
+        data: [
+          {
+            value: 100,
+            itemStyle: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: '#00c9e0' // 0% 处的颜色
+                  },
+                  {
+                    offset: 1,
+                    color: '#005fc1' // 100% 处的颜色
+                  }
+                ],
+                global: false // 缺省为 false
+              }
+            }
+          },
+          {
+            value: 100,
+            itemStyle: {
+              color: '#12274d'
+            }
+          },
+          {
+            value: 200,
+            itemStyle: {
+              color: 'transparent'
+            }
+          }
+        ]
+      }
+    ]
+  }
+
+  myCharts.setOption(option)
+
+  window.addEventListener('resize', () => {
+    myCharts.resize()
+  })
+}
+
+// 初始化地图
+const initMap = () => {
+  const myCharts = echarts.init(document.getElementById('geo'))
+
+  let geoCoordMap = {
+    北京: [116.4551, 40.2539],
+    天津: [117.4219, 39.4189],
+    河北: [114.4995, 38.1006],
+    山西: [112.3352, 37.9413],
+    内蒙古: [111.4124, 40.4901],
+    辽宁: [123.1238, 42.1216],
+    吉林: [125.8154, 44.2584],
+    黑龙江: [127.9688, 45.368],
+    上海: [121.4648, 31.2891],
+    江苏: [118.8062, 31.9208],
+    浙江: [119.5313, 29.8773],
+    安徽: [117.29, 32.0581],
+    福建: [119.4543, 25.9222],
+    江西: [116.0046, 28.6633],
+    山东: [117.1582, 36.8701],
+    河南: [113.4668, 34.6234],
+    湖北: [114.3896, 30.6628],
+    湖南: [113.0823, 28.2568],
+    广东: [113.5107, 23.2196],
+    广西: [108.479, 23.1152],
+    海南: [110.3893, 19.8516],
+    重庆: [107.7539, 30.1904],
+    四川: [103.9526, 30.7617],
+    贵州: [106.6992, 26.7682],
+    云南: [102.9199, 25.4663],
+    西藏: [91.1865, 30.1465],
+    陕西: [109.1162, 34.2004],
+    甘肃: [103.5901, 36.3043],
+    青海: [101.4038, 36.8207],
+    宁夏: [106.3586, 38.1775],
+    新疆: [87.9236, 43.5883],
+    新疆兵团: [85.42, 41.82]
+  }
+
+  let list = [
+    { name: '北京', cons: 100, apct: 100 },
+    { name: '天津', cons: 30, apct: 30 },
+    { name: '河北', cons: 30, apct: 30 },
+    { name: '山西', cons: 30, apct: 30 },
+    { name: '内蒙古', cons: 30, apct: 30 },
+    { name: '辽宁', cons: 30, apct: 30 },
+    { name: '吉林', cons: 30, apct: 30 },
+    { name: '黑龙江', cons: 30, apct: 30 },
+    { name: '上海', cons: 30, apct: 30 },
+    { name: '江苏', cons: 30, apct: 30 },
+    { name: '浙江', cons: 30, apct: 30 },
+    { name: '安徽', cons: 30, apct: 30 },
+    { name: '福建', cons: 30, apct: 30 },
+    { name: '江西', cons: 30, apct: 30 },
+    { name: '山东', cons: 30, apct: 30 },
+    { name: '河南', cons: 30, apct: 30 },
+    { name: '湖北', cons: 30, apct: 30 },
+    { name: '湖南', cons: 30, apct: 30 },
+    { name: '广东', cons: 30, apct: 30 },
+    { name: '广西', cons: 30, apct: 30 },
+    { name: '海南', cons: 30, apct: 30 },
+    { name: '重庆', cons: 30, apct: 30 },
+    { name: '四川', cons: 30, apct: 30 },
+    { name: '贵州', cons: 30, apct: 30 },
+    { name: '云南', cons: 30, apct: 30 },
+    { name: '西藏', cons: 30, apct: 30 },
+    { name: '陕西', cons: 30, apct: 30 },
+    { name: '甘肃', cons: 30, apct: 30 },
+    { name: '青海', cons: 30, apct: 30 },
+    { name: '宁夏', cons: 30, apct: 30 },
+    { name: '新疆', cons: 30, apct: 30 },
+    { name: '新疆兵团', cons: 30, apct: 30 }
+  ]
+
+  let convertData = function (data) {
+    let res = []
+    res = data.map(function (dataItem) {
+      let res = {}
+      let fromCoord = geoCoordMap[dataItem.name]
+      let toCoord = geoCoordMap['北京']
+      let b = fromCoord && toCoord
+      if (fromCoord && toCoord) {
+        return {
+          fromName: dataItem.name,
+          toName: '北京',
+          coords: [fromCoord, toCoord]
+        }
+      }
+      return res
+    })
+    return res
+  }
+
+  let color = ['#5E7AA9', '#1e90ff', '#46bee9']
+  let series = []
+  let key = ['cons', 'acpt']
+  let keyname = ['建设项目', '验收项目']
+  for (let i = 0; i < key.length; i++) {
+    series.push(
+      {
+        name: keyname[i],
+        type: 'lines',
+        zlevel: 2,
+        effect: {
+          show: true,
+          period: 6,
+          constantSpeed: 100,
+          trailLength: 0.4,
+          color: '#F9FAFD',
+          symbolSize: 5
+        },
+        lineStyle: {
+          normal: {
+            color: color[i],
+            width: 0,
+            curveness: 0.2
+          }
+        },
+        data: convertData(list)
+      },
+      {
+        name: keyname[i],
+        type: 'lines',
+        zlevel: 1,
+        effect: {
+          show: true,
+          period: 6,
+          trailLength: 0,
+          symbol: 'image://',
+          symbolSize: 15
+        },
+        label: {
+          emphasis: {
+            show: true
+          }
+        },
+        lineStyle: {
+          normal: {
+            color: color[i],
+            width: 2,
+            opacity: 0.8,
+            curveness: 0.2
+          },
+          emphasis: {
+            color: color[i],
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+            shadowBlur: 10,
+            width: 6
+          }
+        },
+        data: convertData(list)
+      },
+      {
+        name: keyname[i],
+        type: 'effectScatter',
+        coordinateSystem: 'geo',
+        zlevel: 2,
+        rippleEffect: {
+          period: 5,
+          scale: 8,
+          brushType: 'stroke'
+        },
+        symbolSize: function (val) {
+          if ([val[0], val[1]].toString() == geoCoordMap['北京'].toString()) {
+            return 13
+          }
+          return 5
+        },
+        itemStyle: {
+          normal: {
+            color: color[i]
+          }
+        },
+        data: list.map(function (dataItem) {
+          return {
+            name: dataItem.name,
+            value: geoCoordMap[dataItem.name].concat([dataItem[key[i]]])
+          }
+        })
+      },
+      {
+        name: keyname[i],
+        type: 'map',
+        mapType: 'china',
+        zlevel: 0,
+        roam: false,
+        zoom: 1.2,
+        selectedMode: 'single',
+        label: {
+          normal: {
+            show: false
+          },
+          emphasis: {
+            show: false
+          }
+        },
+        itemStyle: {
+          normal: {
+            areaColor: '#F0F2F5',
+            borderColor: 'red'
+          },
+          emphasis: {
+            areaColor: '#F79092'
+          }
+        },
+        data: list.map(function (dataItem) {
+          return {
+            name: dataItem.name,
+            value: dataItem[key[i]]
+          }
+        })
+      }
+    )
+  }
+
+  console.log(series)
+  let option = {
+    title: {
+      text: '模拟迁徙',
+      subtext: '数据纯属虚构',
+      left: 'center',
+      textStyle: {
+        color: '#fff'
+      }
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: function (params) {
+        let res = params.seriesName + '<br/>'
+        if (params.seriesType == 'lines') {
+          res += params.data.fromName + ' > ' + params.data.toName
+          let myseries = option.series
+          for (let i = 0; i < myseries.length; i++) {
+            if (myseries[i].name == params.seriesName && myseries[i].type == 'effectScatter') {
+              for (let j = 0; j < myseries[i].data.length; j++) {
+                if (myseries[i].data[j].name == params.data.fromName) {
+                  res += '：' + myseries[i].data[j].value[2] + '个'
+                }
+              }
+            }
+          }
+        } else if (params.seriesType == 'effectScatter') {
+          res += params.data.name + '：' + params.data.value[2] + '个'
+        } else if (params.seriesType == 'map') {
+          res += params.data.name + '：' + params.data.value + '个'
+        }
+        //console.log(params);
+        return res
+      }
+    },
+    legend: {
+      orient: 'vertical',
+      top: 'bottom',
+      left: 'right',
+      data: ['建设项目', '验收项目'],
+      textStyle: {
+        color: '#fff'
+      },
+      selectedMode: 'single'
+    },
+    geo: {
+      map: china,
+      label: {
+        emphasis: {
+          show: false
+        }
+      },
+      roam: false,
+      zoom: 1.2,
+      itemStyle: {
+        normal: {
+          areaColor: '#F0F2F5',
+          borderColor: 'red'
+        },
+        emphasis: {
+          areaColor: '#F79092'
+        }
+      }
+    },
+    series: series
+  }
+
+  myCharts.on('mapselectchanged', function (params) {
+    let provinceName = ''
+    let selectedMap = params.selected
+    for (let key in selectedMap) {
+      if (selectedMap[key]) {
+        provinceName = key
+      }
+    }
+    console.log('选择的省份是：' + provinceName)
+    console.log(params)
+  })
+
+  let a = 0
+  setInterval(function () {
+    let i = a % 2
+    let aa = ['建设项目', '验收项目']
+    myCharts.dispatchAction({ type: 'legendSelect', name: aa[i] })
+    a++
+  }, 2100)
+}
 onMounted(() => {
   initChartPie()
   initChartBar()
+  initChartLine()
+  initChartRadar()
+  initQuarterChartPie()
+  initMap()
 })
 </script>
 
@@ -575,7 +1191,7 @@ onMounted(() => {
       <!--  设备数据统计-->
       <div class="map">
         <h3>设备数据统计</h3>
-        <div class="geo">123</div>
+        <div id="geo" class="geo"></div>
       </div>
       <!--  用户总量统计-->
       <div class="user panel">
@@ -638,7 +1254,7 @@ onMounted(() => {
         </div>
       </div>
       <!-- 销售-->
-      <div class="sales panel">
+      <div class="sales panel" @mouseenter="mouseenter" @mouseleave="mouseleave">
         <div class="inner">
           <div class="caption">
             <h3>销售额统计</h3>
@@ -646,9 +1262,13 @@ onMounted(() => {
               v-for="(item, index) in salesList"
               :key="index"
               :class="{ active: index === salesTab }"
-              @click="handleSalesTab(index)"
+              @click.stop="handleSalesTab(index)"
               >{{ item.title }}</span
             >
+          </div>
+          <div class="chart">
+            <div class="label">单位:万</div>
+            <div id="line" class="line">123</div>
           </div>
         </div>
       </div>
@@ -656,12 +1276,35 @@ onMounted(() => {
       <div class="wrap">
         <div class="channel panel">
           <div class="inner">
-            <h3>1</h3>
+            <h3>渠道分布</h3>
+            <div class="data">
+              <div id="radar" class="radar"></div>
+            </div>
           </div>
         </div>
         <div class="quarter panel">
           <div class="inner">
-            <h3>2</h3>
+            <h3>一季度销售进度</h3>
+            <div class="chart">
+              <div id="gauge" class="gauge"></div>
+              <div class="label">50 <small>%</small></div>
+            </div>
+            <div class="data">
+              <div class="item">
+                <h4>1,321</h4>
+                <span>
+                  <i class="iconfont icon-dot"></i>
+                  销售额(万元)
+                </span>
+              </div>
+              <div class="item">
+                <h4>1,321</h4>
+                <span>
+                  <i class="iconfont icon-dot"></i>
+                  销售额(万元)
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
