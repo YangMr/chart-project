@@ -1,32 +1,23 @@
 <script setup>
 import * as echarts from 'echarts'
+import { getOverviewList } from '@/api/index.js'
 
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 import { computed, onMounted, ref } from 'vue'
-import { initMap } from '@/utils/myMap.js'
+import { initChartMap } from '@/utils/map.js'
 
-const overviewList = ref([
-  {
-    name: '当日销量',
-    count: '30万',
-    color: '#006cff'
-  },
-  {
-    name: '当日销量',
-    count: '120万',
-    color: '#6acca3'
-  },
-  {
-    name: '当日销量',
-    count: '359万',
-    color: '#6acca3'
-  },
-  {
-    name: '当日销量',
-    count: '1,390万',
-    color: '#ff5660'
+const overviewList = ref()
+
+const initOverviewList = async () => {
+  try {
+    const res = await getOverviewList()
+    console.log('Res=>', res)
+    overviewList.value = res.data.result
+  } catch (e) {
+    console.log(e)
   }
-])
+}
+initOverviewList()
 
 const monitorTab = ref(0)
 const contentList = computed(() => {
@@ -277,6 +268,196 @@ const mouseenter = () => {
 
 const mouseleave = () => {
   start()
+}
+
+const topTab = ref(0)
+const topList = ref([
+  {
+    title: '北京1',
+    count: '25, 179',
+    sub: [
+      {
+        name: '可爱多1',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多2',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多3',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多4',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多5',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多6',
+        count: '2,1324'
+      }
+    ]
+  },
+  {
+    title: '北京2',
+    count: '25, 179',
+    sub: [
+      {
+        name: '可爱1',
+        count: '2,1324'
+      },
+      {
+        name: '可爱2',
+        count: '2,1324'
+      },
+      {
+        name: '可爱3',
+        count: '2,1324'
+      },
+      {
+        name: '可爱4',
+        count: '2,1324'
+      },
+      {
+        name: '可爱5',
+        count: '2,1324'
+      },
+      {
+        name: '可爱6',
+        count: '2,1324'
+      }
+    ]
+  },
+  {
+    title: '北京3',
+    count: '25, 179',
+    sub: [
+      {
+        name: '可爱多1',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多2',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多3',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多4',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多5',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多6',
+        count: '2,1324'
+      }
+    ]
+  },
+  {
+    title: '北京4',
+    count: '25, 179',
+    sub: [
+      {
+        name: '可爱多1',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多2',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多3',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多4',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多5',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多6',
+        count: '2,1324'
+      }
+    ]
+  },
+  {
+    title: '北京5',
+    count: '25, 179',
+    sub: [
+      {
+        name: '可爱多1',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多2',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多3',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多4',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多5',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多6',
+        count: '2,1324'
+      }
+    ]
+  },
+  {
+    title: '北京6',
+    count: '25, 179',
+    sub: [
+      {
+        name: '可爱多1',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多2',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多3',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多4',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多5',
+        count: '2,1324'
+      },
+      {
+        name: '可爱多6',
+        count: '2,1324'
+      }
+    ]
+  }
+])
+const subList = computed(() => {
+  return topList.value[topTab.value].sub
+})
+const handleTopTab = (index) => {
+  topTab.value = index
 }
 
 // 初始化饼图
@@ -572,7 +753,8 @@ const initChartLine = () => {
     legend: {
       data: ['预期销售额', '实际销售额'],
       textStyle: {
-        color: '#4c9bfd'
+        color: '#4c9bfd',
+        fontSize: 8
       },
       right: '10%'
     },
@@ -804,7 +986,7 @@ onMounted(() => {
   initChartLine()
   initChartRadar()
   initQuarterChartPie()
-  initMap()
+  initChartMap()
 })
 </script>
 
@@ -937,14 +1119,14 @@ onMounted(() => {
             <div class="item">
               <h4>{{ activeData.orderCount }}</h4>
               <span>
-                <span class="iconfont icon-dot"></span>
+                <i class="iconfont icon-dot"></i>
                 订单量
               </span>
             </div>
             <div class="item">
               <h4>{{ activeData.saleCount }}</h4>
               <span>
-                <span class="iconfont icon-dot"></span>
+                <i class="iconfont icon-dot"></i>
                 销售额(万元)
               </span>
             </div>
@@ -1009,7 +1191,45 @@ onMounted(() => {
       <!-- 排行-->
       <div class="top panel">
         <div class="inner">
-          <h3>排行</h3>
+          <div class="all">
+            <h3>全国热榜</h3>
+            <ul>
+              <li>
+                <i class="icon-cup1" style="color: #d93f36"></i>
+                可爱多
+              </li>
+              <li>
+                <i class="icon-cup2" style="color: #68d8fe"></i>
+                娃哈啥
+              </li>
+              <li>
+                <i class="icon-cup3" style="color: #4c9bfd"></i>
+                喜之郎
+              </li>
+            </ul>
+          </div>
+          <div class="province">
+            <h3>各省热销 <i class="date">// 近30日 //</i></h3>
+            <div class="data">
+              <ul class="sup">
+                <li
+                  v-for="(item, index) in topList"
+                  :key="index"
+                  :class="{ active: index === topTab }"
+                  @click="handleTopTab(index)"
+                >
+                  <span>{{ item.title }}</span>
+                  <span>{{ item.count }} <s class="icon-up"></s></span>
+                </li>
+              </ul>
+              <ul class="sub">
+                <li v-for="(item, index) in subList" :key="index">
+                  <span>{{ item.name }}</span
+                  ><span> {{ item.count }} <s class="icon-up"></s></span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

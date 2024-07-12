@@ -4,10 +4,10 @@
     padding: 0;
 }
 
-html, body, #app {
+html, body {
     width: 100%;
-    height: 100%;
 }
+
 
 ul, li {
     list-style: none;
@@ -19,10 +19,10 @@ h4 {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    width: 100%;
-    height: 100%;
+    /*width: 100%;*/
+    /*height: 100%;*/
     background: url('@/assets/images/bg.jpg') no-repeat;
-    background-size: 1920px 1080px;
+    background-size: cover;
     line-height: 1.15;
     font-size: 0.5rem;
 }
@@ -30,8 +30,8 @@ body {
 .viewport {
     max-width: 1920px;
     min-width: 1024px;
-    /*min-height: 780px;*/
-    height: 100%;
+    min-height: 680px !important;
+    /*height: 100%;*/
     margin: 0 auto;
     background: url('@/assets/images/logo.png') no-repeat;
     background-size: contain;
@@ -81,9 +81,6 @@ h3 {
         font-size: 42.66px !important;
     }
 
-    body {
-
-    }
 }
 
 /*屏幕分辨率大雨1920*/
